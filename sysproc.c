@@ -90,11 +90,16 @@ sys_uptime(void)
   return xticks;
 }
 
-
-
 //to halt
 int sys_halt (void)
 {
-   outw(0xB004, 0x0|0x2000);
+  outw(0xB004, 0x0|0x2000);
+  return 0;
+}
+
+//to reboot
+int sys_reboot (void)
+{
+  outb(0x64, 0xfe);
   return 0;
 }

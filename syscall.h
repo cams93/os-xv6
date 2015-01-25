@@ -22,3 +22,4 @@
 #define SYS_close  21
 //add
 #define SYS_halt   22
+#define SYS_reboot 23
