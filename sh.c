@@ -66,7 +66,7 @@ runcmd(struct cmd *cmd)
 
   if(cmd == 0)
     exit();
-  
+
   switch(cmd->type){
   default:
     panic("runcmd");
@@ -120,7 +120,7 @@ runcmd(struct cmd *cmd)
     wait();
     wait();
     break;
-    
+
   case BACK:
     bcmd = (struct backcmd*)cmd;
     if(fork1() == 0)
@@ -146,7 +146,9 @@ main(void)
 {
   static char buf[100];
   int fd;
-  
+
+  buf[0] ='/';
+
   // Assumes three file descriptors open.
   while((fd = open("console", O_RDWR)) >= 0){
     if(fd >= 3){
@@ -154,15 +156,15 @@ main(void)
       break;
     }
   }
-  
+
   // Read and run input commands.
-  while(getcmd(buf, sizeof(buf)) >= 0){
-    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
+  while(getcmd(buf+1, sizeof(buf)) >= 0){
+    if(buf[1] == 'c' && buf[2] == 'd' && buf[3] == ' '){
       // Clumsy but will have to do for now.
       // Chdir has no effect on the parent if run in the child.
       buf[strlen(buf)-1] = 0;  // chop \n
-      if(chdir(buf+3) < 0)
-        printf(2, "cannot cd %s\n", buf+3);
+      if(chdir(buf+4) < 0)
+        printf(2, "cannot cd %s\n", buf+4);
       continue;
     }
     if(fork1() == 0)
@@ -183,7 +185,7 @@ int
 fork1(void)
 {
   int pid;
-  
+
   pid = fork();
   if(pid == -1)
     panic("fork");
@@ -268,7 +270,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
 {
   char *s;
   int ret;
-  
+
   s = *ps;
   while(s < es && strchr(whitespace, *s))
     s++;
@@ -301,7 +303,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
   }
   if(eq)
     *eq = s;
-  
+
   while(s < es && strchr(whitespace, *s))
     s++;
   *ps = s;
@@ -312,7 +314,7 @@ int
 peek(char **ps, char *es, char *toks)
 {
   char *s;
-  
+
   s = *ps;
   while(s < es && strchr(whitespace, *s))
     s++;
@@ -420,7 +422,7 @@ parseexec(char **ps, char *es)
   int tok, argc;
   struct execcmd *cmd;
   struct cmd *ret;
-  
+
   if(peek(ps, es, "("))
     return parseblock(ps, es);
 
@@ -459,7 +461,7 @@ nulterminate(struct cmd *cmd)
 
   if(cmd == 0)
     return 0;
-  
+
   switch(cmd->type){
   case EXEC:
     ecmd = (struct execcmd*)cmd;
@@ -478,7 +480,7 @@ nulterminate(struct cmd *cmd)
     nulterminate(pcmd->left);
     nulterminate(pcmd->right);
     break;
-    
+
   case LIST:
     lcmd = (struct listcmd*)cmd;
     nulterminate(lcmd->left);
