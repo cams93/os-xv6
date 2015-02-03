@@ -184,7 +184,7 @@ struct {
 
 #define C(x)  ((x)-'@')  // Control-x
 
-//extern void killproc(void);
+extern void killproc(void);
 
 void
 consoleintr(int (*getc)(void))
@@ -197,6 +197,9 @@ consoleintr(int (*getc)(void))
     case C('P'):  // Process listing.
       procdump();
       break;
+    case C('C'):  // Kill process
+        killproc();
+        break;
     case C('U'):  // Kill line.
       while(input.e != input.w &&
             input.buf[(input.e-1) % INPUT_BUF] != '\n'){

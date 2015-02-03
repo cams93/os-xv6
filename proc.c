@@ -98,7 +98,7 @@ userinit(void)
 
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
-
+  p->priority = 0;
   p->state = RUNNABLE;
 }
 
@@ -159,6 +159,7 @@ fork(void)
   pid = np->pid;
 
   // lock to force the compiler to emit the np->state write last.
+  np->priority = 0; //cada vez que hacemos fork a un proceso le asignamos un cero de prioridad
   acquire(&ptable.lock);
   np->state = RUNNABLE;
   release(&ptable.lock);
@@ -266,6 +267,7 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct proc *hp;
 
   for(;;){
     // Enable interrupts on this processor.
@@ -273,14 +275,20 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    hp = ptable.proc;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
-
+      if(hp->state != RUNNABLE)  //garantiza que tenga runnable
+        hp = p;
+      if(hp->priority < p->priority) hp = p;
+    }
+    p = hp;
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      proc = p;
+
+      proc = p;                                        //para matar un proceso tenemos que matar a proc
       switchuvm(p);
       p->state = RUNNING;
       swtch(&cpu->scheduler, proc->context);
@@ -289,7 +297,7 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       proc = 0;
-    }
+
     release(&ptable.lock);
 
   }
@@ -427,7 +435,18 @@ kill(int pid)
   return -1;
 }
 //killproc() -funcion que llama a kill ventaja ptable, pid
+void
+killproc()
+{
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNING) //aqui ==kill else unused
+    {
+      kill(p->pid);
+    }
 
+  }
+}
 //PAGEBREAK: 36
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.

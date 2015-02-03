@@ -76,7 +76,7 @@ argstr(int n, char **pp)
     return -1;
   return fetchstr(addr, pp);
 }
-
+//funciones que manda a llamar el kernel
 extern int sys_chdir(void);
 extern int sys_close(void);
 extern int sys_dup(void);
@@ -100,6 +100,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_halt(void);
 extern int sys_reboot(void);
+extern int sys_setpriority(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -125,6 +126,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_halt]    sys_halt,
 [SYS_reboot]  sys_reboot,
+[SYS_setpriority]  sys_setpriority,
 };
 
 void

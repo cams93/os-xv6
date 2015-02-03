@@ -103,3 +103,14 @@ int sys_reboot (void)
   outb(0x64, 0xfe);
   return 0;
 }
+
+//set priority
+int sys_setpriority (void)
+{
+  int priority;
+  argint(0,&priority); //& pasarle la direccion
+  proc->priority = priority; //proc esta la estructura proc
+  return 0;
+  //argint leer el registro donde el usuario esta pasano los parametros
+}
+

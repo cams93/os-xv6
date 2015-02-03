@@ -1,4 +1,5 @@
 // System call numbers
+//Funciones nivel de usuario
 #define SYS_fork    1
 #define SYS_exit    2
 #define SYS_wait    3
@@ -23,3 +24,4 @@
 //add
 #define SYS_halt   22
 #define SYS_reboot 23
+#define SYS_setpriority 24
