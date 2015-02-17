@@ -25,3 +25,8 @@
 #define SYS_halt   22
 #define SYS_reboot 23
 #define SYS_setpriority 24
+#define SYS_shmem 25
+#define SYS_shmat 26
+#define SYS_shmdt 27
+#define SYS_shmctl 28
+

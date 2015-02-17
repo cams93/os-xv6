@@ -101,6 +101,10 @@ extern int sys_uptime(void);
 extern int sys_halt(void);
 extern int sys_reboot(void);
 extern int sys_setpriority(void);
+extern int sys_shmem(void);
+extern int sys_shmat(void);
+extern int sys_shmdt(void);
+extern int sys_shmctl(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -127,6 +131,10 @@ static int (*syscalls[])(void) = {
 [SYS_halt]    sys_halt,
 [SYS_reboot]  sys_reboot,
 [SYS_setpriority]  sys_setpriority,
+[SYS_shmem]  sys_shmem,
+[SYS_shmat]  sys_shmat,
+[SYS_shmdt]  sys_shmdt,
+[SYS_shmctl]  sys_shmctl,
 };
 
 void

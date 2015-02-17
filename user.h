@@ -26,6 +26,10 @@ int uptime(void);
 int halt(void);
 int reboot(void);
 int setpriority(int);
+int shmem(int);
+int shmat(int);  //regresa direccion de memoria
+int shmdt(int);
+int shmctl(int); 
 
 // ulib.c
 int stat(char*, struct stat*);
