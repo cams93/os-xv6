@@ -198,6 +198,7 @@ consoleintr(int (*getc)(void))
       procdump();
       break;
     case C('C'):  // Kill process
+        //cprintf("aqui");
         killproc();
         break;
     case C('U'):  // Kill line.

@@ -69,7 +69,11 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-
+  
+  p->signals[0] = (sighandler_t*) -1;
+  p->signals[1] = (sighandler_t*) -1;
+  p->signals[2] = (sighandler_t*) -1;
+  p->signals[3] = (sighandler_t*) -1;
   return p;
 }
 
@@ -163,6 +167,11 @@ fork(void)
   acquire(&ptable.lock);
   np->state = RUNNABLE;
   release(&ptable.lock);
+  
+  np->signals[0] = (sighandler_t*) -1;
+  np->signals[1] = (sighandler_t*) -1;
+  np->signals[2] = (sighandler_t*) -1;
+  np->signals[3] = (sighandler_t*) -1;
 
   return pid;
 }
@@ -482,4 +491,32 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+//run the signal function
+int
+sys_killsignal(void) {
+  int pid;
+  int signum;
+  struct proc *p;
+  if(argint(0, &pid) < 0) return -1;
+    if(argint(1, &signum) < 0) return -1;
+  if(signum > 4 || signum < 1) return -1;
+
+  //Try to find the process with the matching pid.
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    if(p->pid == pid) break;
+
+  //If the pid is not found finish     
+  if(p->pid != pid) return -1;
+
+  //Default option finish the process
+  signum -=1;
+  if((int)p->signals[signum] == -1) kill(p->pid);
+  //Else execute the function
+  //Move the stack to the next position
+  p->tf->esp -= 4;
+  //Point to the function
+  p->tf->eip = (uint)p->signals[signum];
+  return 1;
 }

@@ -29,7 +29,11 @@ int setpriority(int);
 int shmem(int);
 int shmat(int);  //regresa direccion de memoria
 int shmdt(int);
-int shmctl(int); 
+int shmctl(int);
+int killsignal(int, int);
+int signal(int, sighandler_t*);
+int getppid(void);
+
 
 // ulib.c
 int stat(char*, struct stat*);
