@@ -178,6 +178,7 @@ UPROGS=\
   _fibo\
   _shmem_test\
   _test_signal\
+  _time\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
