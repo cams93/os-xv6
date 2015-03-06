@@ -171,8 +171,8 @@ main(void)
       if (buf[1] == '\n' || buf[1] == ' ')
         runcmd(parsecmd(&buf[1]));
       runcmd(parsecmd(buf));
-    wait();
     }
+    wait();
   }
   exit();
 }

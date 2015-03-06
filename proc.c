@@ -448,14 +448,24 @@ void
 killproc()
 {
   struct proc *p;
+  int pid=-1;
+  
+  acquire(&ptable.lock);
+  
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
     if(p->state == RUNNING) //aqui ==kill else unused
     {
-      kill(p->pid);
+      pid = p->pid;
+      break;
     }
-
+  }
+  release(&ptable.lock);
+  if(pid != -1)
+  {
+    kill(pid);
   }
 }
+
 //PAGEBREAK: 36
 // Print a process listing to console.  For debugging.
 // Runs when user types ^P on console.
