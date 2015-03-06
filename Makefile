@@ -179,6 +179,7 @@ UPROGS=\
   _shmem_test\
   _test_signal\
   _time\
+  _rename\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
