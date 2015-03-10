@@ -111,6 +111,47 @@ sys_fstat(void)
   return filestat(f, st);
 }
 
+//update the name of dir entry i.e rename 
+char* skipelem(char *path, char *name);
+int sys_rename(void){
+  char name[DIRSIZ],newname[DIRSIZ], *new, *old;
+  struct inode *dp, *ip;
+  struct dirent de;
+  uint off;
+
+  if(argstr(0, &old) < 0 || argstr(1, &new) < 0)
+    return -1;
+
+  //memset(&de, 0, sizeof(de));
+  while(*new != '\0')
+   new = skipelem(new,newname);
+ 
+  begin_op();
+  //Search for parent inode
+  if((dp = nameiparent(old, name)) == 0){
+    end_op();
+    return -1;
+  }
+
+  ilock(dp);
+  //Search for the position "off" direntry
+  if((ip = dirlookup(dp, name, &off)) == 0){
+    iunlockput(dp);
+    end_op();
+    return -1;
+  }
+ 
+  strncpy(de.name, newname, DIRSIZ);
+  de.inum = ip->inum;
+ 
+  if(writei(dp, (char*)&de, off, sizeof(de)) != sizeof(de))
+    panic("rename: writei");
+ 
+  iunlockput(dp);
+  end_op(); 
+  return 1;
+}
+
 // Create the path new as a link to the same inode as old.
 int
 sys_link(void)

@@ -33,6 +33,7 @@ int shmctl(int);
 int killsignal(int, int);
 int signal(int, sighandler_t*);
 int getppid(void);
+int rename(char*, char*);
 
 
 // ulib.c

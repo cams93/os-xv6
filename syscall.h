@@ -32,4 +32,5 @@
 #define SYS_killsignal  29
 #define SYS_signal      30
 #define SYS_getppid     31
+#define SYS_rename      32
 

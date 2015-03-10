@@ -108,6 +108,7 @@ extern int sys_shmctl(void);
 extern int sys_killsignal(void);
 extern int sys_signal(void);
 extern int sys_getppid(void);
+extern int sys_rename(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -141,6 +142,7 @@ static int (*syscalls[])(void) = {
 [SYS_killsignal] sys_killsignal,
 [SYS_signal]  sys_signal,
 [SYS_getppid] sys_getppid,
+[SYS_rename]  sys_rename,
 };
 
 void
