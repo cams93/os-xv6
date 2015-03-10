@@ -34,7 +34,7 @@ int killsignal(int, int);
 int signal(int, sighandler_t*);
 int getppid(void);
 int rename(char*, char*);
-
+int move(char*, char*);
 
 // ulib.c
 int stat(char*, struct stat*);

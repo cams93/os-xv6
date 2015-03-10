@@ -33,4 +33,6 @@
 #define SYS_signal      30
 #define SYS_getppid     31
 #define SYS_rename      32
+#define SYS_move        33
+
 

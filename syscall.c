@@ -109,6 +109,7 @@ extern int sys_killsignal(void);
 extern int sys_signal(void);
 extern int sys_getppid(void);
 extern int sys_rename(void);
+extern int sys_move(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -143,6 +144,7 @@ static int (*syscalls[])(void) = {
 [SYS_signal]  sys_signal,
 [SYS_getppid] sys_getppid,
 [SYS_rename]  sys_rename,
+[SYS_move]    sys_move,
 };
 
 void

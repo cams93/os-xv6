@@ -180,6 +180,7 @@ UPROGS=\
   _test_signal\
   _time\
   _rename\
+  _move\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

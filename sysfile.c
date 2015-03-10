@@ -115,8 +115,8 @@ sys_fstat(void)
 char* skipelem(char *path, char *name);
 int sys_rename(void){
   char name[DIRSIZ],newname[DIRSIZ], *new, *old;
-  struct inode *dp, *ip;
-  struct dirent de;
+  struct inode *dp, *ip;  //dp directorio padre ip inodo del archivo
+  struct dirent de;       //de directorio entry nombre del directorio e inode
   uint off;
 
   if(argstr(0, &old) < 0 || argstr(1, &new) < 0)
@@ -151,6 +151,47 @@ int sys_rename(void){
   end_op(); 
   return 1;
 }
+
+int sys_move(void){
+  char name[DIRSIZ],newname[DIRSIZ], *destino, *origen;
+  struct inode *dpo, *ipo;  //dp directorio padre ip inodo del archivo
+  struct inode *dpd;  //dp directorio padre
+  struct dirent de;       //de directorio entry nombre del directorio e inode
+  uint off;   //uint entero sin signo off es offset
+  
+  if(argstr(0, &origen) < 0 || argstr(1, &destino) < 0)
+    return -1;
+  
+  begin_op();
+  //Search for parent inode origen
+  if((dpo = nameiparent(origen, name)) == 0){
+    end_op();
+    return -1;
+  }
+  
+  //Search for parent inode destino
+  if((dpd = nameiparent(destino, newname)) == 0){
+    end_op();
+    return -1;
+  }
+  
+  //Search for the position "off" direntry
+  if((ipo = dirlookup(dpo, name, &off)) == 0){
+    iunlockput(dpo);
+    end_op();
+    return -1;
+  }
+  
+  memset(&de, 0, sizeof(de));
+  if(writei(dpo, (char*)&de, off, sizeof(de)) != sizeof(de))
+    panic("rename: writei");
+  
+  dirlink(dpd, newname, ipo->inum);
+  end_op(); 
+  return 1;
+}
+  
+  
 
 // Create the path new as a link to the same inode as old.
 int
