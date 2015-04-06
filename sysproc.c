@@ -125,7 +125,7 @@ sys_getppid(void)
 int
 sys_signal(void)
 {
-  int signum;
+  int signum,  handler_temp;
   sighandler_t * handler;
   if(argint(0,&signum)<0)
     return -1;
@@ -133,7 +133,8 @@ sys_signal(void)
     return -1;
   signum-=1;
   proc -> signals[signum] = handler;
-  return signum+1;
+  handler_temp = (int) proc->signals[signum];
+  return handler_temp;
 }
 
 
