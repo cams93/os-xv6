@@ -134,6 +134,7 @@ sys_signal(void)
   signum-=1;
   proc -> signals[signum] = handler;
   handler_temp = (int) proc->signals[signum];
+  
   return handler_temp;
 }
 
