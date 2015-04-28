@@ -181,9 +181,10 @@ UPROGS=\
   _time\
   _rename\
   _move\
+  _filetest\
 
-fs.img: mkfs README $(UPROGS)
-	./mkfs fs.img README $(UPROGS)
+fs.img: mkfs README users $(UPROGS)
+	./mkfs fs.img README users $(UPROGS)
 
 -include *.d
 
