@@ -34,10 +34,6 @@ int parse(char *line,char del,char *word,int pos){
   return i+1;
 }
 
-void authentication (char * user, char * password, char *line)
-{
-    
-}
 
 int main(int argc, char *argv[]){
   int fd, i,pos;
