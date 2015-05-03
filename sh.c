@@ -142,11 +142,14 @@ getcmd(char *buf, int nbuf)
 }
 
 int
-main(void)
+main(int argc, char *argv[])
 {
   static char buf[100];
   int fd;
-
+  mkdir("/home/");
+  mkdir(argv[0]);
+  chdir(argv[0]);
+  
   buf[0] ='/';
 
   // Assumes three file descriptors open.
@@ -156,9 +159,12 @@ main(void)
       break;
     }
   }
-
+  
   // Read and run input commands.
   while(getcmd(buf+1, sizeof(buf)) >= 0){
+    if(buf[1] == 'e' && buf[2] == 'x' && buf[3] == 'i' && buf[4] == 't'){  
+      exit();
+    }
     if(buf[1] == 'c' && buf[2] == 'd' && buf[3] == ' '){
       // Clumsy but will have to do for now.
       // Chdir has no effect on the parent if run in the child.

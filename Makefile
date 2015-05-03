@@ -183,6 +183,8 @@ UPROGS=\
   _move\
   _filetest\
   _add\
+  _passwd\
+  _login\
 
 fs.img: mkfs README users $(UPROGS)
 	./mkfs fs.img README users $(UPROGS)

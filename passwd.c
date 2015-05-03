@@ -45,42 +45,54 @@ void strcat ( char *s , char *t){
 }
 
 int main(int argc, char *argv[]){
-  //mkdir("/home");
-  int fd, i, pos;
+  int fd, fk, i, pos;
   int exist = 0;
   char line[200];
-  char directory[200];
   char name[100];
   char *user = argv[1];
   char *pass = argv[2];
   fd = openFile("users");
+  fk = openFile("tmp");
   i = readLine(fd,line);
   while( i > 0){
     pos = 0;
     pos = parse(line,':',name,pos);
     if(strcmp(name,user)==0)
     {
-        printf(1,"user already exists \n");
+        write(fk, user, strlen(user));
+        write(fk, ":", 1);
+        write(fk, pass, strlen(pass));
+        if(strcmp(name,"root")==0)
+        {
+            write(fk, ":/", 2);
+        }
+        else
+        {
+            write(fk, ":/home/", 7);
+            write(fk, user, strlen(user));
+        }
+        write(fk,"\n", 1);
         exist = 1;
+        printf(1,"password changed \n");
+    }
+    else
+    {
+        write(fk, line, strlen(line));
     }
     i = readLine(fd,line);
   }
   readLine(fd,line);
-  
+  close(fd);
+  close(fk);
   if(exist == 0)
   {
-    write(fd,"\n", 1);
-    write(fd, user, strlen(user));
-    write(fd, ":", 1);
-    write(fd, pass, strlen(pass));
-    write(fd, ":/home/", 7);
-    write(fd, user, strlen(user));
-    strcpy(directory, "/home/");
-    strcat(directory, user);
-    mkdir(directory);
-    printf(1,"user added \n");
+    printf(1,"the user must exist to change its password \n");
+  }
+  else
+  {
+    unlink("users");
+    move("tmp","users");
   }
   
-  close(fd);
   exit();
 }
