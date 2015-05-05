@@ -145,10 +145,11 @@ int
 main(int argc, char *argv[])
 {
   static char buf[100];
+  static char workD[100],*p;
   int fd;
   mkdir("/home/");
-  mkdir(argv[0]);
-  chdir(argv[0]);
+  mkdir(argv[1]);
+  chdir(argv[1]);
   
   buf[0] ='/';
 
@@ -158,6 +159,17 @@ main(int argc, char *argv[])
       close(fd);
       break;
     }
+  }
+  
+  ////Init WORKD
+  workD[0] = '/';
+  workD[1] = 0;
+  
+  if(argc == 2){
+    strcpy(workD,argv[1]);
+    workD[strlen(workD)] = '/';
+    workD[strlen(workD)] = 0;
+    chdir(argv[1]);
   }
   
   // Read and run input commands.
@@ -171,6 +183,30 @@ main(int argc, char *argv[])
       buf[strlen(buf)-1] = 0;  // chop \n
       if(chdir(buf+4) < 0)
         printf(2, "cannot cd %s\n", buf+4);
+      
+      //Remove the previous dir when ..
+      if(*(buf + 4) == '.' && *(buf + 5) == '.' ){ //Remove from the path
+        p = &workD[strlen(workD)-2];
+        while(*p != '/')*p-- = 0;
+      }
+      else{ //Add the new dir
+        strcpy(workD+strlen(workD),buf+4);
+        workD[strlen(workD)] = '/';
+        workD[strlen(workD)+1] = 0;
+      }
+      continue;
+    }
+    
+     //pwd
+    if(buf[1] == 'p' && buf[2] == 'w' && buf[3] == 'd'){
+      if(workD[1] == 0){
+        printf(0,"%s\n",workD);
+        continue;
+      }
+      workD[strlen(workD)-1] = 0;
+      printf(0,"%s\n",workD);
+      workD[strlen(workD)] = '/';
+      workD[strlen(workD)+1] = 0;
       continue;
     }
     if(fork1() == 0){

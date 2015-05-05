@@ -40,7 +40,7 @@ int checkPassword(char *user, char *password, char *directory)
     char line[200];
     char userFile[25];
     char passwordFile[25];
-    fd = openFile("users");
+    fd = openFile("/users");
     i = readLine(fd,line);
     
     while( i > 0){
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]){
             break;
         }
     }
-    char *argv1[] = {directory, 0};
+    char *argv1[] = {"sh", directory, 0};
     
     printf(1, "init: starting sh\n");
     if(fork() == 0){

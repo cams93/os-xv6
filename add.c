@@ -45,7 +45,12 @@ void strcat ( char *s , char *t){
 }
 
 int main(int argc, char *argv[]){
-  //mkdir("/home");
+  
+  if(argc != 3){
+    printf(2, "Usage: add username password \n");
+    exit();
+  }
+
   int fd, i, pos;
   int exist = 0;
   char line[200];
@@ -53,7 +58,7 @@ int main(int argc, char *argv[]){
   char name[100];
   char *user = argv[1];
   char *pass = argv[2];
-  fd = openFile("users");
+  fd = openFile("/users");
   i = readLine(fd,line);
   while( i > 0){
     pos = 0;
